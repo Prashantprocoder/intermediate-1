@@ -1,13 +1,15 @@
 # intermediate-1
-Solidity Smart Contract with Error Handling
+Solidity Smart Contract with Error Handling:-
 This repository contains a simple Solidity smart contract demonstrating the use of require(), assert(), and revert() statements for error handling.
 
 Smart Contract
 The smart contract, ErrorHandling, includes three functions:
 
-addToBalance(uint256 amount): Adds the specified amount to the contract's balance. It uses require() to ensure the amount is greater than zero.
-checkBalance(): Checks that the balance is non-negative using assert(). This is for demonstration purposes.
-withdraw(uint256 amount): Withdraws the specified amount from the contract's balance. It uses revert() to handle cases where the amount exceeds the balance
+*addToBalance(uint256 amount): Adds the specified amount to the contract's balance. It uses require() to ensure the amount is greater than zero.
+
+*checkBalance(): Checks that the balance is non-negative using assert(). This is for demonstration purposes.
+
+*withdraw(uint256 amount): Withdraws the specified amount from the contract's balance. It uses revert() to handle cases where the amount exceeds the balance
 
 
 code:-
