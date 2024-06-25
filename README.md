@@ -12,13 +12,18 @@ The smart contract, ErrorHandling, includes three functions:
 *withdraw(uint256 amount): Withdraws the specified amount from the contract's balance. It uses revert() to handle cases where the amount exceeds the balance
 
 
+
 code:-
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
 
-contract ErrorHandling {
-    uint256 public balance;
 
+
+
+     // SPDX-License-Identifier: MIT
+     pragma solidity ^0.8.0;
+
+      contract ErrorHandling {
+        uint256 public balance; 
+    
     // Function to add to balance using require()
     function addToBalance(uint256 amount) public {
         require(amount > 0, "Amount must be greater than zero");
@@ -37,5 +42,5 @@ contract ErrorHandling {
             revert("Insufficient balance");
         }
         balance -= amount;
-    }
-}
+    }}
+
