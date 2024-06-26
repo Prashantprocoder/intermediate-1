@@ -2,6 +2,12 @@
 Solidity Smart Contract with Error Handling:-
 This repository contains a simple Solidity smart contract demonstrating the use of require(), assert(), and revert() statements for error handling.
 
+
+require: Used to enforce conditions that must be met for a function to execute.
+assert: Used to assert conditions that should always be true. If false, it indicates an internal error.
+revert: Used to revert execution and provide an error message.
+These mechanisms are crucial for ensuring the correctness and safety of smart contracts running on the Ethereum blockchain, helping to prevent unintended behavior and potential security vulnerabilities.
+
 Smart Contract
 The smart contract, ErrorHandling, includes three functions:
 
@@ -16,45 +22,33 @@ The smart contract, ErrorHandling, includes three functions:
 code:-
 
 
+     // SPDX-License-Identifier: MIT
+     pragma solidity ^0.8.0;
 
-      // SPDX-License-Identifier: MIT
-        pragma solidity ^0.8.20;
+     contract ErrorHandling {
+    uint256 public balance;
 
-     contract SimpleBank {
-         address public admin;
-    mapping(address => uint) private accountBalances;
-
-    modifier onlyAdmin() {
-        require(msg.sender == admin, "Unauthorized: Only admin can execute this");
-        _;
+    // Function to add to balance using require()
+    function addToBalance(uint256 amount) public {
+        require(amount > 0, "Amount must be greater than zero");
+        balance += amount;
     }
 
-    constructor() {
-        admin = msg.sender;
+    // Function to check balance using assert()
+    function checkBalance() public view {
+        // This assert will always be true, for demonstration purposes
+        assert(balance >= 0);
     }
 
-    event FundsDeposited(address indexed user, uint amount);
-    event FundsWithdrawn(address indexed user, uint amount);
-
-    function addFunds() public payable {
-        require(msg.value > 0, "Deposit must be greater than zero");
-        accountBalances[msg.sender] += msg.value;
-        emit FundsDeposited(msg.sender, msg.value);
+    // Function to withdraw from balance using revert()
+    function withdraw(uint256 amount) public {
+        if (amount > balance) {
+            revert("Insufficient balance");
+        }
+        balance -= amount;
     }
+       }
 
-    function withdrawFunds(uint amount) public {
-        require(amount > 0, "Withdrawal amount must be greater than zero");
-        require(accountBalances[msg.sender] >= amount, "Insufficient balance");
-
-        uint initialContractBalance = address(this).balance;
-        require(initialContractBalance >= amount, "Contract balance is low");
-
-        accountBalances[msg.sender] -= amount;
-        payable(msg.sender).transfer(amount);
-        require(address(this).balance == initialContractBalance - amount, "Balance mismatch after withdrawal");
-
-        emit FundsWithdrawn(msg.sender, amount);
-    }
 
     function checkBalance() public view returns (uint) {
         return accountBalances[msg.sender];
