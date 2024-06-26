@@ -17,30 +17,48 @@ code:-
 
 
 
+      // SPDX-License-Identifier: MIT
+        pragma solidity ^0.8.20;
 
-     // SPDX-License-Identifier: MIT
-     pragma solidity ^0.8.0;
+     contract SimpleBank {
+         address public admin;
+    mapping(address => uint) private accountBalances;
 
-      contract ErrorHandling {
-        uint256 public balance; 
-    
-    // Function to add to balance using require()
-    function addToBalance(uint256 amount) public {
-        require(amount > 0, "Amount must be greater than zero");
-        balance += amount;
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Unauthorized: Only admin can execute this");
+        _;
     }
 
-    // Function to check balance using assert()
-    function checkBalance() public view {
-        // This assert will always be true, for demonstration purposes
-        assert(balance >= 0);
+    constructor() {
+        admin = msg.sender;
     }
 
-    // Function to withdraw from balance using revert()
-    function withdraw(uint256 amount) public {
-        if (amount > balance) {
-            revert("Insufficient balance");
-        }
-        balance -= amount;
-    }}
+    event FundsDeposited(address indexed user, uint amount);
+    event FundsWithdrawn(address indexed user, uint amount);
+
+    function addFunds() public payable {
+        require(msg.value > 0, "Deposit must be greater than zero");
+        accountBalances[msg.sender] += msg.value;
+        emit FundsDeposited(msg.sender, msg.value);
+    }
+
+    function withdrawFunds(uint amount) public {
+        require(amount > 0, "Withdrawal amount must be greater than zero");
+        require(accountBalances[msg.sender] >= amount, "Insufficient balance");
+
+        uint initialContractBalance = address(this).balance;
+        require(initialContractBalance >= amount, "Contract balance is low");
+
+        accountBalances[msg.sender] -= amount;
+        payable(msg.sender).transfer(amount);
+        require(address(this).balance == initialContractBalance - amount, "Balance mismatch after withdrawal");
+
+        emit FundsWithdrawn(msg.sender, amount);
+    }
+
+    function checkBalance() public view returns (uint) {
+        return accountBalances[msg.sender];
+    }
+     }
+
 
